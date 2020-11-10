@@ -1,0 +1,58 @@
+Install and configure docker
+	- https://runnable.com/docker/install-docker-on-windows-10
+	- choco install docker
+Add a shared drive: C (in Configure the resources. I set 2 CPSs and 2048MB Memory)
+Set Docker to run on startup
+	- start > startup apps
+	- Docker Desktop > On
+At this point, run ipconfig and check if there is a network with ip of 10.0.75.1. If there is, skip this, if not, then
+	- setup a virtual adapter in hyperv
+	- Virtual switch manager
+	- New virtual network switch
+	- Internal network
+	- Don't enable the vlanid
+
+	- Assign to the vm
+		- Right click on the docker vm, settings
+		- Select the new virtual switch
+		- I dont think you need to enable the virtual lan identification. Try without, try with only if you have issues
+		- Configure the network adapter
+		- run ipconfig /all, and take a note of the following
+		- Subnet mask from the Default Switch ethernet adapter vEthernet
+		- Default Gateway from Ethernet adapter Ethernet
+		- Dns server address from Ethernet adapter Ethernet                                       
+	- Configure the switch
+		- Head over to Control Panel\Network and Internet\Network and Sharing Centre
+		- Click on the vEthernet(your net NAT)
+		- Properties
+			- Tick Internet Protocol Version 4
+			- Select properties
+			- Set IP address to 10.0.75.1
+			- Subnet mask from above
+			- Default gateway from above
+			- DNS server addresses from above
+	- Can now ping -a 10.0.75.1, or, assuming you have iis installed, can hit in a browser
+
+Configure SQLEXPRESS for connection from container
+	- C:\Windows\SysWOW64\SQLServerManager14.msc
+	- SQL Server Network Configuration
+	- Protocols for SQLEXPRESS
+	- TCP/IP Right properties
+	- PROTOCOL: Enabled: Yes, Listen All: Yes
+	- IP ADDRESSES: TCP Port: 1433
+	- Do this for every ip entry in that list - not just the top one!
+	- Restart SQLEXPRESS
+		- EITHER: Powershell restart-service -Force 'MSSQL$SQLEXPRESS'
+		- OR start > Services > Right click SQL Server (SQLEXPRESS) > Restart
+Configure local firewall to allow access to SQL on port 1433
+	- start > Windows Defender Firewall with Advanced Security
+	- Inbound rules
+	- New Rule
+	- Port > Next
+	- TCP, Specific local ports 1433[-1434?] > Next
+	- Allow the connection > Next
+	- Tick all > Next
+	- Enter a name > Finish
+	- Show it works by connecting in SSMS
+		- Server name: tcp:10.0.75.1,1433
+
