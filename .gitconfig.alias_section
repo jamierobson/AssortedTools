@@ -1,0 +1,11 @@
+[alias]
+	nf = "!f() { git checkout master && git pull origin && git checkout -B features/"$1" && git push -u origin features/"$1" && echo 'ready' ; }; f"
+	ef = "!f() { git fetch && git checkout features/"$1" && git pull origin && echo 'ready' ; }; f"
+	cm = "!f() { git checkout master && git reset --hard HEAD && git pull origin; }; f"
+	sa = "!f() { set +B && git stash apply stash@{"$1"} && set -B ; }; f"
+	sd = "!f() { set +B && git stash drop stash@{"$1"} && set -B ; }; f"
+	ss = "!f() { git stash save -u "$1" ; }; f"
+	sl = "!f() { git stash list ; }; f"
+	rp = "!f() { git pull --rebase ; }; f"
+	rb = "!f() { branchName=$(git rev-parse --abbrev-ref HEAD) && git cm && git checkout $branchName && git rebase origin/master && git rp ; }; f"
+	upstream = "!f() { git branch --set-upstream-to=origin/features/"$1" ; }; f"
