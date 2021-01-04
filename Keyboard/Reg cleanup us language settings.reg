@@ -1,0 +1,44 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layout]
+"IgnoreRemoteKeyboardLayout"=dword:1
+
+[-HKEY_USERS\.DEFAULT\Keyboard Layout\Preload]
+
+[-HKEY_LOCAL_MACHINE\SYSTEM\Keyboard Layout\Preload]
+
+[-HKEY_USERS\S-1-5-18\Keyboard Layout\Preload]
+
+[-HKEY_USERS\S-1-5-19\Keyboard Layout\Preload]
+
+[-HKEY_USERS\S-1-5-20\Keyboard Layout\Preload]
+
+[-HKEY_USERS\S-1-5-21-2094825919-2978655187-3471270048-7657\Keyboard Layout\Preload]
+
+
+
+
+
+; The below are things I am experimenting with - this issue irritates me beyond belief
+;[HKEY_USERS\.DEFAULT\Keyboard Layout\Preload]
+;"1"="0809:00000809"
+;"2"="0406:00000406"
+;"3"=-
+
+;[HKEY_USERS\.DEFAULT\Keyboard Layout\Substitutes]
+;"00000409"="0809:00000809"
+
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layout]
+;"IgnoreRemoteKeyboardLayout"=dword:00000001
+
+; This is a candidate to set an en-GB default setting
+; [HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\MUI\UILanguages\en-GB]
+; "LCID"=dword:00000809
+; "Type"=dword:00000112
+
+; I hope that this removes the en-US default
+; [-HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\MUI\UILanguages\en-US]
+; Here's how to replace the key if I did this wrong
+; [HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\MUI\UILanguages\en-US]
+; "LCID"=dword:00000409
+; "Type"=dword:00000111

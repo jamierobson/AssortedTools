@@ -1,0 +1,99 @@
+Creating components in angular
+
+Doco
+https://angular.io/guide/creating-libraries
+
+Prereqs:
+NPM
+npm install -g @angular/cli
+
+Steps
+ng new lib-name --create-application=false
+ng generate library lib-name
+ng generate module lib-name
+
+ng generate library
+create empty folder: projects\lib-name\src
+	
+Boiler plating: In the root folder
+	steal 
+		.gitconfig. 
+		.gitignore. 
+		.eslintrc.js				rules for ng lint
+		.npmrc.						registry feed information
+		.prettierrc.js				browser formatting
+	Borrow, be prepared to edit OR create anew
+		build-local-package.ps1
+		azure-pipelines-ci.yml
+		azure-pipelines-release.yml
+	auto created - purpose
+		angular.json				definies which tools for which commands, where projects lie (csproj style)
+		package-lock.json			auto generated, locks precisely which packages were checked out to make this workspace
+		package.json				referenced npm packages
+		tsconfig.json				typescript transpiler options
+		tslint.json					rules for ng lint
+		tsconfig.spec.json			test configuration
+		tsconfig.lib.json			tsconfig targeted for the library
+		tsconfig.lib.prod.json		production compilation options, extensions
+		ng-package.json				transpilation output folders
+		karma.configuration			configuration how to runn tests in headless browser
+		karma.conf.azure.js			karma plugin
+		
+If stealing everything, need to update
+	tsconfig.json
+	angular.json
+	
+Not sure what to do about building the package.json. Going to want to experiment seeing what exactly is needed
+
+npm install -g vsts-npm-auth --registry https://registry.npmjs.com --always-auth false
+vsts-npm-auth -config .npmrc
+npm install
+ng build
+
+Note, if you have many issues to work through, you might choose to use 
+Start-Transcript -Path .\transpilation.txt; ng build; Stop-Transcript;
+
+instead
+
+Add peer dependencies for package in the lib\packacges.json
+	This is along the lines of advertising which libraries should be pulled, like we see on nuget
+	Also make sure they are in the outer dependency package, so that it actually gets restored
+___
+	Remember to address:	
+		web worker
+		utilities [stolen bits of utility code so far]
+
+	issues
+	
+	Make sure to expose EVERY CLASS that you want to be able to import in consuming products in public-api.ts
+
+In lib-tp, Evgeniy currently:
+create simple application, include this library
+npm run build:lib
+npm run serve:test
+
+	
+
+To use in the portal:
+
+npm run build:lib
+npm run build-local-package
+
+Find the package in ./libs/[name]/dist folder
+C:\source\_libs\lib-model-viewer\dist\threeshape-model-viewer-0.0.3-dev.tgz
+
+Then go to portal
+
+
+npm install C:\source\_libs\lib-model-viewer\dist\threeshape-model-viewer-0.0.3-dev.tgz
+npm i C:\source\_libs\lib-model-viewer\dist\threeshape-model-viewer-0.0.3-dev.tgz
+
+Now in the portal, we need to do a chunk of stuff
+
+
+
++++
+package.json has command for building web workers defined
+
+webpack.config.worker dev version, production version, contains mapping file
+tsconfig.worker.json
