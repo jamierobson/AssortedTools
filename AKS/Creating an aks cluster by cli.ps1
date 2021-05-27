@@ -31,6 +31,7 @@ elseif($clusterResourceGroup.StartsWith("am-")) { $location = "eastus" } `
 elseif($clusterResourceGroup.StartsWith("as-")) { $location = "eastasia" }
 $location
 
+LoginIfRequired
 Set-SubscriptionTo -name $createClusterInSubscription
 
 

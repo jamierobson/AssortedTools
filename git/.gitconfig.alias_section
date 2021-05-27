@@ -1,11 +1,12 @@
 [alias]
     nf = "!f() { git checkout master && git pull origin && git checkout -B features/"$1" && git push -u origin features/"$1" && echo 'ready' ; }; f"
+	nfmaster = "!f() { git checkout master && git pull origin && git checkout -B features/"$1" && git push -u origin features/"$1" && echo 'ready' ; }; f"
+	nfmain = "!f() { git checkout main && git pull origin && git checkout -B features/"$1" && git push -u origin features/"$1" && echo 'ready' ; }; f"	
 	nb = "!f() { git checkout main && git pull origin && git checkout -B features/"$1" && git push -u origin features/"$1" && echo 'ready' ; }; f"
     ef = "!f() { git fetch && git checkout features/"$1" && git pull origin && echo 'ready' ; }; f"
     cm = "!f() { git checkout master && git fetch && git reset --hard origin/master; }; f"
 	cmaster = "!f() { git checkout master && git fetch && git reset --hard origin/master; }; f"
 	cmain = "!f() { git checkout main && git fetch && git reset --hard origin/main; }; f"
-    squash = "!f() { git reset $(git merge-base master $(git rev-parse --abbrev-ref HEAD)) && git add -A && git commit -m temp-commit-message ; }; f"
 	sa = "!f() { set +B && git stash apply stash@{"$1"} && set -B ; }; f"
     sd = "!f() { set +B && git stash drop stash@{"$1"} && set -B ; }; f"
     ss = "!f() { git stash save -u "$1" ; }; f"

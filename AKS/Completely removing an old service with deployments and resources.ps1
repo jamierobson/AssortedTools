@@ -9,6 +9,7 @@ param([string]$serviceName)
     kubectl delete deployment $serviceName
     kubectl delete service $serviceName
     kubectl delete issuer $serviceName-issuer
+    kubectl delete secret $serviceName
     kubectl delete secret $serviceName-certificate
     kubectl delete secret $serviceName-issuer
     kubectl delete certificate $serviceName-certificate
@@ -18,7 +19,7 @@ param([string]$serviceName)
     kubectl delete hpa $serviceName
 }
 
-
+LoginIfRequired
 Set-SubscriptionTo -name $subscription
 az aks get-credentials -g $clusterResourceGroup -n $clusterName
 Cleanup-OldDeployment -serviceName $serviceName

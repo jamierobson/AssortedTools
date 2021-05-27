@@ -3,7 +3,7 @@ $subscription = ""
 $clusterResourceGroup=''
 $clusterName="$clusterResourceGroup-aks" # assuming a naming convention
 
-az login
+LoginIfRequired
 Set-SubscriptionTo -name $subscription
 az aks get-credentials -g $clusterResourceGroup -n $clusterName
 

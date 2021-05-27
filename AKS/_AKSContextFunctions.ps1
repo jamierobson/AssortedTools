@@ -1,11 +1,17 @@
+function Get-ProductionSubscriptions {
+    return @("")
+}
+
+function LoginIfRequired {
+    $showAccountResponse = az account show
+    if (!$showAccountResponse){
+        az login
+    }
+}
+
 function ProtectAgainst-AccidentalProductionAccess {
 [CmdletBinding()]param([Parameter(ValueFromPipeline)]$subscriptionName)
-
-    # This function will add a small challenge to encourage a developer 
-    # to realise that the actions they are about to perform are against a production cluster
-    # Add names of all your production subscriptions here. 
-    $productionSubscriptions = @("", "") 
-
+    $productionSubscriptions = Get-ProductionSubscriptions 
     if ($productionSubscriptions -icontains $subscriptionName)
     {
         $matchThis = [Guid]::NewGuid().ToString().Substring(0, 3);
