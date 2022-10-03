@@ -21,7 +21,7 @@ $desiredLocales = $($uk, $denmark)
 $languageList = Get-WinUserLanguageList;
 $languageList.Clear();
 
-$desiredLocales.Locate | ForEach-Object {
+$desiredLocales.Locale | ForEach-Object {
     $languageList.Add($_);
 }
 
