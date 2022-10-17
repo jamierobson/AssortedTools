@@ -25,3 +25,14 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CLASSES_ROOT\markdown]
 @="Blank Markdown file"
+
+
+; Add Powershell script to menu
+[HKEY_CLASSES_ROOT\.ps1]
+@="powershellscript"
+
+[HKEY_CLASSES_ROOT\.ps1\ShellNew]
+"NullFile"=""
+
+[HKEY_CLASSES_ROOT\powershellscript]
+@="Empty powershell script"
