@@ -1,5 +1,6 @@
 Windows Registry Editor Version 5.00
 
+; Remove annoying new file options
 [-HKEY_CLASSES_ROOT\.bmp\ShellNew]
 
 [-HKEY_CLASSES_ROOT\.rtf\ShellNew]
@@ -13,3 +14,14 @@ Windows Registry Editor Version 5.00
 [-HKEY_CLASSES_ROOT\.mdb\ShellNew]
 
 [-HKEY_CLASSES_ROOT\.zip\CompressedFolder\ShellNew]
+
+
+; Add Markdown to menu
+[HKEY_CLASSES_ROOT\.md]
+@="markdown"
+
+[HKEY_CLASSES_ROOT\.md\ShellNew]
+"NullFile"=""
+
+[HKEY_CLASSES_ROOT\markdown]
+@="Blank Markdown file"
