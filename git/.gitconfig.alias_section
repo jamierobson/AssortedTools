@@ -1,13 +1,38 @@
+# Add this to C:\Program Files\Git\etc\gitconfig
+
 [alias]
-    nf = "!f() { git checkout master && git pull origin && git checkout -B features/"$1" && git push -u origin features/"$1" && echo 'ready' ; }; f"
-	nb = "!f() { git checkout main && git pull origin && git checkout -B features/"$1" && git push -u origin features/"$1" && echo 'ready' ; }; f"
-    ef = "!f() { git fetch && git checkout features/"$1" && git pull origin && echo 'ready' ; }; f"
-    cm = "!f() { git checkout master && git fetch && git reset --hard origin/master; }; f"
+	nt = "!f() { git checkout main && git pull origin && git checkout -B task/"$1" && git push -u origin task/"$1" && echo 'ready' ; }; f"
+	ntm = "!f() { git checkout master && git pull origin && git checkout -B task/"$1" && git push -u origin task/"$1" && echo 'ready' ; }; f"
+    nf = "!f() { git checkout main && git pull origin && git checkout -B feature/"$1" && git push -u origin feature/"$1" && echo 'ready' ; }; f"
+    nfm = "!f() { git checkout master && git pull origin && git checkout -B feature/"$1" && git push -u origin feature/"$1" && echo 'ready' ; }; f"
+	nb = "!f() { git checkout main && git pull origin && git checkout -B "$1" && git push -u origin "$1" && echo 'ready' ; }; f"
+	nbm = "!f() { git checkout master && git pull origin && git checkout -B "$1" && git push -u origin "$1" && echo 'ready' ; }; f"
+    cm = "!f() { git checkout main && git fetch && git reset --hard origin/main; }; f"
 	cmaster = "!f() { git checkout master && git fetch && git reset --hard origin/master; }; f"
-	cmain = "!f() { git checkout main && git fetch && git reset --hard origin/main; }; f"
-    squash = "!f() { git reset $(git merge-base master $(git rev-parse --abbrev-ref HEAD)) && git add -A && git commit -m temp-commit-message ; }; f"
 	sa = "!f() { set +B && git stash apply stash@{"$1"} && set -B ; }; f"
     sd = "!f() { set +B && git stash drop stash@{"$1"} && set -B ; }; f"
     ss = "!f() { git stash save -u "$1" ; }; f"
     sl = "!f() { git stash list ; }; f"
-	removeallbranches = "!f() { git cm && git branch | grep -v "master" | xargs git branch -D ; }; f"
+	eb = "!f() { \
+		if [ -z \"$1\" ]; then \
+			echo \"Please provide a value to match against.\"; \
+			exit 1; \
+		fi; \
+		remote_branches=(); \
+		while IFS= read -r branch; do \
+			branch_name=${branch#origin/}; \
+			if [[ $branch_name == *$1* ]]; then \
+				remote_branches+=(\"$branch_name\"); \
+			fi; \
+		done < <(git for-each-ref --format='%(refname:short)' refs/remotes/origin); \
+		matched_branch_count=${#remote_branches[@]}; \
+		if [ $matched_branch_count -eq 1 ]; then \
+			echo \"matched branch ${remote_branches[0]}\"; \
+			git checkout \"${remote_branches[0]}\"; \
+		elif [ $matched_branch_count -gt 1 ]; then \
+			echo \"Multiple matches:\"; \
+			printf \"%s\\n\" \"${remote_branches[@]}\"; \
+		else \
+			echo \"No matches\"; \
+		fi; \
+	}; f"
