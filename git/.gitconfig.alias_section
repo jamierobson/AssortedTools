@@ -1,18 +1,17 @@
-# Add this to C:\Program Files\Git\etc\gitconfig
+# Add this to C:\Program Files\Git\etc\gitconfig or ~/.gitconfig
 
 [alias]
-	nt = "!f() { git checkout main && git pull origin && git checkout -B task/"$1" && git push -u origin task/"$1" && echo 'ready' ; }; f"
-	ntm = "!f() { git checkout master && git pull origin && git checkout -B task/"$1" && git push -u origin task/"$1" && echo 'ready' ; }; f"
-    nf = "!f() { git checkout main && git pull origin && git checkout -B feature/"$1" && git push -u origin feature/"$1" && echo 'ready' ; }; f"
-    nfm = "!f() { git checkout master && git pull origin && git checkout -B feature/"$1" && git push -u origin feature/"$1" && echo 'ready' ; }; f"
-	nb = "!f() { git checkout main && git pull origin && git checkout -B "$1" && git push -u origin "$1" && echo 'ready' ; }; f"
-	nbm = "!f() { git checkout master && git pull origin && git checkout -B "$1" && git push -u origin "$1" && echo 'ready' ; }; f"
-    cm = "!f() { git checkout main && git fetch && git reset --hard origin/main; }; f"
-	cmaster = "!f() { git checkout master && git fetch && git reset --hard origin/master; }; f"
+	nt = "!f() { git nb task/"$1" ; }; f"
+	nb = "!f() { git cm && git checkout -B "$1" && git push -u origin "$1" && echo 'ready' ; }; f"
+	cm = "!f() { git show-ref --quiet refs/heads/main && b=main || b=master; git checkout $b && git fetch && git reset --hard origin/$b; }; f"
+
 	sa = "!f() { set +B && git stash apply stash@{"$1"} && set -B ; }; f"
     sd = "!f() { set +B && git stash drop stash@{"$1"} && set -B ; }; f"
     ss = "!f() { git stash save -u "$1" ; }; f"
     sl = "!f() { git stash list ; }; f"
+  	sp = "!f() { set +B && git stash pop ; }; f"
+  	sc = "!f() { set +B && git stash clear ; }; f"
+
 	eb = "!f() { \
 		if [ -z \"$1\" ]; then \
 			echo \"Please provide a value to match against.\"; \
