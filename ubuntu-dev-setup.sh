@@ -6,6 +6,7 @@ sudo snap install bruno
 sudo snap install slack
 sudo snap install pgadmin4
 sudo snap install azuredatastudio
+sudo snap install storage-explorer
 sudo snap install rider --clasic
 sudo snap install code --classic
 
@@ -26,6 +27,8 @@ sudo apt install dotnet-sdk-10.0
 sudo apt install intune-portal
 
 sudo usermod -aG docker $USER
+
+snap connect storage-explorer:password-manager-service :password-manager-service
 
 # Claude
 curl -fsSL https://claude.ai/install.sh | bash
@@ -84,6 +87,11 @@ sudo modprobe -r kvm
 
 # azure vpn
 curl https://packages.microsoft.com/config/ubuntu/24.04/prod.list | sudo tee /etc/apt/sources.list.d/microsoft-ubuntu-jammy-prod.list
+
+echo 'Package: *
+Pin: release o=Microsoft Corporation
+Pin-Priority: 1001' | sudo tee /etc/apt/preferences.d/microsoft-pin
+
 sudo apt-get update
 sudo apt-get install microsoft-azurevpnclient
 
@@ -91,13 +99,31 @@ sudo apt-get install microsoft-azurevpnclient
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
 
 # Repositories
-ssh-keygen -t rsa -b 4096 -C "your@azuredevopsmail.com"
+ssh-keygen -t rsa -b 4096 -C ""
 ssh-add ~/.ssh/id_rsa
 
 mkdir -p ~/src
 cd ~/src
 
-# Clone repositories here.
+git clone git@github.com:umbraco/OrchestrationDocs.git
+git clone git@ssh.dev.azure.com:v3/umbraco/Umbraco%20Headless/Umbraco.Compose.Integrations
+git clone git@ssh.dev.azure.com:v3/umbraco/Umbraco%20Headless/Umbraco.Compose.Integrations.Pipeline
+git clone git@ssh.dev.azure.com:v3/umbraco/Umbraco%20Headless/Umbraco.Headless.ApiDocs
+git clone git@ssh.dev.azure.com:v3/umbraco/Umbraco%20Headless/Umbraco.Headless.Platform
+
+mkdir -p ~/src/_heartcore
+cd ~/src/_heartcore
+
+git clone git@ssh.dev.azure.com:v3/umbraco/Umbraco%20Headless/Umbraco.Cloud.Headless.Delivery.GraphQL
+git clone git@ssh.dev.azure.com:v3/umbraco/Umbraco%20Headless/Umbraco.Cloud.Headless.Delivery.Platform
+git clone git@ssh.dev.azure.com:v3/umbraco/Umbraco%20Headless/Umbraco.Cloud.Headless.Delivery.RestApi
+git clone git@ssh.dev.azure.com:v3/umbraco/Umbraco%20Headless/Umbraco.Cloud.Heartcore
+
+mkdir -p ~/src/_other_teams
+cd ~/src/_other_teams
+
+git clone git@ssh.dev.azure.com:v3/umbraco/Cloud%20Team/Concorde
+git clone git@github.com:umbraco/Umbraco-CMS.git
 
 # Terraform
 sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
@@ -113,4 +139,51 @@ gpg --no-default-keyring \
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 
 sudo apt update
-sudo apt install terraform
+sudo apt-get install terraform
+
+# Umbraco
+dotnet new install Umbraco.Templates
+
+# Hypervisor
+sudo apt install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virtinst virt-manager gnome-boxes acl                            
+  sudo systemctl enable --now libvirtd
+  sudo adduser $USER kvm                                                        
+  sudo adduser $USER libvirt
+
+
+sudo rm -f /dev/kvm                            
+
+sudo chown root:kvm /dev/kvm
+  sudo chmod 660 /dev/kvm                                                       
+  sudo setfacl -b /dev/kvm
+  sudo setfacl -m u:libvirt-qemu:rw /dev/kvm   
+
+ sudo sh -c 'echo "KERNEL==\"kvm\", GROUP=\"kvm\", MODE=\"0660\",  RUN+=\"/usr/bin/setfacl -m u:libvirt-qemu:rw /dev/kvm\"" >  /etc/udev/rules.d/99-kvm.rules'
+
+ echo kvm_intel | sudo tee /etc/modules-load.d/kvm.conf
+
+  sudo udevadm control --reload-rules && sudo udevadm trigger                   
+  sudo systemctl restart libvirtd
+
+sudo rm /etc/modprobe.d/blacklist-kvm.conf
+                               
+  sudo modprobe -r kvm_intel kvm
+  sudo modprobe kvm_intel
+
+# Load testing
+sudo gpg -k
+sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+sudo apt-get update
+sudo apt-get install k6
+
+#VS Code
+cat << EOF > ~/.local/share/nemo/actions/vscode.nemo_action
+[Nemo Action]
+Name=Open in VS Code
+Comment=Open in VS Code
+Exec=code "%F"
+Icon-Name=visual-studio-code
+Selection=Any
+Extensions=dir;
+EOF
